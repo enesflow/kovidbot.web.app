@@ -1,0 +1,53 @@
+* {
+    outline: none;
+}
+
+.header {
+    font-size: clamp(5vh, 2em, 5vw) !important;
+    text-align: center;
+}
+a {
+    text-decoration: none !important;
+}
+
+.checkboxes {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.checkbox {
+    margin: 10px 10px;
+}
+
+a:hover {
+    filter: contrast(200%);
+    transition: all 0.5s ease;
+}
+
+.chart {
+    margin: auto;
+    width: 75vw;
+    overflow: hidden;
+}
+
+button {
+    margin: 1vh auto !important;
+}
+
+input[type="checkbox"],
+label {
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.loading {
+    overflow: hidden;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
