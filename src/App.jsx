@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
-import "mini.css/dist/mini-default.min.css";
+import "react-bulma-components/dist/react-bulma-components.min.css";
+import "bulma-switch/dist/css/bulma-switch.min.css"
 import Chart from "react-apexcharts";
 import { css } from "@emotion/react";
 import Loader from "react-spinners/PuffLoader";
+import { Quicklink } from "react-quicklink";
 
 const override = css`
     position: fixed;
@@ -44,7 +46,7 @@ export class App extends Component {
         this.state = {
             button: "Grafiği yenile",
             data: [],
-            buttonStyle: {},
+            buttonStyle: { margin: "auto" },
             options: null,
             showLoader: true,
         };
@@ -84,7 +86,6 @@ export class App extends Component {
             const data = await axios.get(
                 "https://kovidbot.herokuapp.com/fulldatakoved/",
             );
-            console.log(data["data"]);
             const res = data["data"].reverse();
             this.setState({ data: res });
             this.changeData();
@@ -101,71 +102,73 @@ export class App extends Component {
             }
             await localStorage.clear();
             localStorage.setItem("datatoget", this.datatoget.join(" "));
-            console.log(
-                localStorage.getItem("datatoget"),
-                this.datatoget.join(" "),
-            );
             await this.changeData();
         };
     }
     render() {
         return (
             <div>
-                <div className="row">
-                    <div className="header col-sm">
-                        <a
-                            rel="noreferrer"
-                            target="_blank"
-                            href="https://t.me/kovidbot"
-                            className="col-sm"
-                        >
-                            @kovidbot
-                        </a>
-                        Türkiye Kovid19 Grafiği
+                <div className="columns">
+                    <div className="column is-full">
+                        <div className="header ">
+                            <Quicklink
+                                rel="noreferrer"
+                                target="_blank"
+                                style={{ marginRight: "10px" }}
+                                to="https://t.me/kovidbot"
+                                title="@kovidbot"
+                                alt="@kovidbot"
+                            >
+                                @kovidbot
+                            </Quicklink>
+                            Türkiye Kovid19 Grafiği
+                        </div>
                     </div>
                 </div>
                 <div className="container">
-                    <div className="row">
-                        <button
-                            style={this.state.buttonStyle}
-                            className="primary large"
-                            onClick={async () => {
-                                this.setState({
-                                    buttonStyle: {
-                                        pointerEvents: "none",
-                                    },
-                                });
-                                await this.getFullData();
-                                this.setState({
-                                    buttonStyle: { pointerEvents: "all" },
-                                });
-                            }}
-                        >
-                            {this.state.button}
-                        </button>
-                    </div>
-                    <div className="row">
-                        <div className="checkboxes" style={{ margin: "auto" }}>
-                            {this.checkboxes.map((i) => {
-                                return (
-                                    <span className="checkbox" key={i}>
-                                        <input
-                                            type="checkbox"
-                                            id={i}
-                                            onChange={(e) => {
-                                                this.handleChange(
-                                                    i,
-                                                    e.target.checked,
-                                                );
-                                            }}
-                                        />
-                                        <label htmlFor={i}>
-                                            {this.names[i]}
-                                        </label>
-                                    </span>
-                                );
-                            })}
-                        </div>
+                    <button
+                        style={this.state.buttonStyle}
+                        className=" button is-info"
+                        onClick={async () => {
+                            this.setState({
+                                buttonStyle: {
+                                    pointerEvents: "none",
+                                    margin: "auto",
+                                },
+                            });
+                            await this.getFullData();
+                            this.setState({
+                                buttonStyle: {
+                                    pointerEvents: "all",
+                                    margin: "auto",
+                                },
+                            });
+                        }}
+                    >
+                        {this.state.button}
+                    </button>
+                </div>
+                <br />
+                <div className="columns ">
+                    <div className="checkboxes">
+                        {this.checkboxes.map((i) => {
+                            return (
+                                <span className="checkbox" key={i}>
+                                    <input
+                                        type="checkbox"
+                                        className="switch is-info is-rounded"
+                                        id={i}
+                                        onChange={(e) => {
+                                            this.handleChange(
+                                                i,
+                                                e.target.checked,
+                                            );
+                                        }}
+                                    />
+                                    <label htmlFor={i}>{this.names[i]}</label>
+                                </span>
+                            );
+                        })}
                     </div>
                 </div>
                 <br />
@@ -183,7 +186,6 @@ export class App extends Component {
     async componentDidMount() {
         for (const i of this.datatoget) {
             document.querySelector("#" + i).checked = true;
-            console.log(i);
         }
         this.getFullData();
     }

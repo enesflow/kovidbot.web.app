@@ -1,31 +1,33 @@
 * {
-    outline: none;
+    text-decoration: none;
 }
 
 .header {
     font-size: clamp(5vh, 2em, 5vw) !important;
     text-align: center;
 }
-a {
-    text-decoration: none !important;
-}
 
 .checkboxes {
     margin: auto;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap:  wrap;
     justify-content: space-around;
     align-items: center;
 }
 
 .checkbox {
-    margin: 10px 10px;
+    margin: 10px;
+    padding: 5px;
 }
 
-a:hover {
-    filter: contrast(200%);
-    transition: all 0.5s ease;
+
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .chart {
@@ -43,6 +45,8 @@ label {
     cursor: pointer;
     white-space: nowrap;
 }
+
+
 
 .loading {
     overflow: hidden;
