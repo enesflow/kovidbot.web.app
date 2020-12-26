@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
 import "react-bulma-components/dist/react-bulma-components.min.css";
-import "bulma-switch/dist/css/bulma-switch.min.css"
+import "bulma-switch/dist/css/bulma-switch.min.css";
 import Chart from "react-apexcharts";
 import { css } from "@emotion/react";
 import Loader from "react-spinners/PuffLoader";
@@ -56,6 +56,15 @@ export class App extends Component {
                     curve: "smooth",
                     width: 3,
                 },
+                theme: {
+                    palette: "palette1",
+                },
+                title: {
+                    text: "@kovidbot Türkiye Kovid19 Grafiği",
+                    align: "left",
+                },
+
+                dataLabels: { enabled: false },
                 xaxis: {
                     categories: this.state.data.map((i) => i["tarih"]),
                 },
@@ -76,7 +85,7 @@ export class App extends Component {
                         className="chart"
                         options={options}
                         series={series}
-                        type="line"
+                        type="area"
                     ></Chart>
                 ),
             });
