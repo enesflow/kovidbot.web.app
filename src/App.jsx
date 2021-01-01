@@ -1,38 +1,48 @@
 import React, { Component } from "react";
 import axios from "axios";
-import "./App.css";
+import Tablo from "./Tablo";
+import Grafik from "./Grafik";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import "react-bulma-components/dist/react-bulma-components.min.css";
 import "bulma-switch/dist/css/bulma-switch.min.css";
 import Chart from "react-apexcharts";
-import { css } from "@emotion/react";
-import Loader from "react-spinners/PuffLoader";
 import { Quicklink } from "react-quicklink";
-
-const override = css`
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-`;
 
 export class App extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            data: [{ Yükleniyor: "Lütfen bekleyin" }],
+            options: null,
+            showLoader: true,
+            button: "Yenile",
+            buttonStyle: { margin: "auto" },
+        };
         this.names = {
+            tarih: "Tarih",
             gunluk_vaka: "Günlük vaka",
             gunluk_hasta: "Günlük hasta",
             gunluk_vefat: "Günlük vefat",
             gunluk_test: "Günlük test",
             gunluk_iyilesen: "Günlük iyileşen",
+            toplam_test: "Toplam test",
+            toplam_hasta: "Toplam hasta",
+            toplam_vefat: "Toplam vefat",
+            toplam_iyilesen: "Toplam iyileşen",
+            toplam_yogun_bakim: "Toplam yoğun bakım",
+            toplam_entube: "Toplam entübe",
+            hastalarda_zaturre_oran: "Hastalarda zatürre oranı",
+            agir_hasta_sayisi: "Ağır hasta sayısı",
+            yatak_doluluk_orani: "Yatak doluluk oranı",
+            eriskin_yogun_bakim_doluluk_orani:
+                "Erişkin yoğun bakım doluluk oranı",
+            ventilator_doluluk_orani: "Ventilator doluluk oranı",
+            ortalama_filyasyon_suresi: "Ortalama filyasyon süresi",
+            ortalama_temasli_tespit_suresi: "Ortalama temaslı tespit süresi",
+            filyasyon_orani: "Filyasyon oranı",
         };
-        this.checkboxes = [
-            "gunluk_vaka",
-            "gunluk_hasta",
-            "gunluk_vefat",
-            "gunluk_test",
-            "gunluk_iyilesen",
-        ];
-
         this.datatoget = localStorage.getItem("datatoget")
             ? localStorage
                   .getItem("datatoget")
@@ -42,14 +52,6 @@ export class App extends Component {
                       return a;
                   }, [])
             : [];
-
-        this.state = {
-            button: "Grafiği yenile",
-            data: [],
-            buttonStyle: { margin: "auto" },
-            options: null,
-            showLoader: true,
-        };
         this.changeData = async () => {
             const options = {
                 stroke: {
@@ -58,10 +60,6 @@ export class App extends Component {
                 },
                 theme: {
                     palette: "palette1",
-                },
-                title: {
-                    text: "@kovidbot Türkiye Kovid19 Grafiği",
-                    align: "left",
                 },
 
                 dataLabels: { enabled: false },
@@ -99,6 +97,7 @@ export class App extends Component {
             this.setState({ data: res });
             this.changeData();
             this.setState({ showLoader: false });
+            console.log(res.slice().reverse()[0]);
             return res;
         };
         this.handleChange = async (i, checked) => {
@@ -117,27 +116,26 @@ export class App extends Component {
     render() {
         return (
             <div>
-                <div className="columns">
-                    <div className="column is-full">
-                        <div className="header ">
-                            <Quicklink
-                                rel="noreferrer"
-                                target="_blank"
-                                style={{ marginRight: "10px" }}
-                                to="https://t.me/kovidbot"
-                                title="@kovidbot"
-                                alt="@kovidbot"
-                            >
-                                @kovidbot
-                            </Quicklink>
-                            Türkiye Kovid19 Grafiği
-                        </div>
-                    </div>
-                </div>
+                <h1 className="title has-text-centered">
+                    <Quicklink
+                        rel="noreferrer"
+                        target="_blank"
+                        style={{ marginRight: "10px" }}
+                        to="https://t.me/kovidbot"
+                        title="@kovidbot"
+                        alt="@kovidbot"
+                    >
+                        @kovidbot
+                    </Quicklink>
+                    Türkiye Kovid19 Verileri
+                </h1>
                 <div className="container">
                     <button
                         style={this.state.buttonStyle}
-                        className=" button is-info"
+                        className={
+                            "button is-info" +
+                            (this.state.showLoader ? " is-loading" : "")
+                        }
                         onClick={async () => {
                             this.setState({
                                 buttonStyle: {
@@ -154,49 +152,39 @@ export class App extends Component {
                             });
                         }}
                     >
-                        {this.state.button}
+                        <span>
+                            <FontAwesomeIcon icon={faSyncAlt} />
+                        </span>
+                        <span style={{ margin: "auto 5px" }}></span>
+                        <span>{this.state.button}</span>
                     </button>
                 </div>
-                <br />
-                <div className="columns ">
-                    <div className="checkboxes">
-                        {this.checkboxes.map((i) => {
-                            return (
-                                <span className="checkbox" key={i}>
-                                    <input
-                                        type="checkbox"
-                                        className="switch is-info is-rounded"
-                                        id={i}
-                                        onChange={(e) => {
-                                            this.handleChange(
-                                                i,
-                                                e.target.checked,
-                                            );
-                                        }}
-                                    />
-                                    <label htmlFor={i}>{this.names[i]}</label>
-                                </span>
-                            );
-                        })}
-                    </div>
-                </div>
-                <br />
-                {this.state.chart}
-                <Loader
-                    className="loading"
-                    css={override}
-                    loading={this.state.showLoader}
-                    color="#008FFB"
-                    size={150}
-                ></Loader>
+                {this.props.grafik ? (
+                    <Grafik
+                        showLoader={this.state.showLoader}
+                        getFullData={this.getFullData}
+                        handleChange={this.handleChange}
+                        Chart={this.state.chart}
+                        datatoget={this.datatoget}
+                        names={this.names}
+                    />
+                ) : (
+                    <span></span>
+                )}
+                {this.props.tablo ? (
+                    <Tablo
+                        getFullData={this.getFullData}
+                        data={this.state.data}
+                        names={this.names}
+                    />
+                ) : (
+                    <span></span>
+                )}
             </div>
         );
     }
     async componentDidMount() {
-        for (const i of this.datatoget) {
-            document.querySelector("#" + i).checked = true;
-        }
-        this.getFullData();
+        await this.getFullData();
     }
 }
 
