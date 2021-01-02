@@ -1,0 +1,15 @@
+.news-parent {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 300px;
+    margin: 50px auto;
+}
+
+.media-content > * {
+    word-wrap: break-word;
+    overflow: hidden;
+}

@@ -1,14 +1,24 @@
 import React, { Component } from "react";
 import axios from "axios";
+import Loader from "react-spinners/PuffLoader";
 import Tablo from "./Tablo";
 import Grafik from "./Grafik";
+import Haber from "./Haber";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import "react-bulma-components/dist/react-bulma-components.min.css";
 import "bulma-switch/dist/css/bulma-switch.min.css";
+import "bulma-tooltip/dist/css/bulma-tooltip.min.css";
 import Chart from "react-apexcharts";
 import { Quicklink } from "react-quicklink";
+import { css } from "@emotion/react";
 
+const override = css`
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+`;
 export class App extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +29,7 @@ export class App extends Component {
             showLoader: true,
             button: "Yenile",
             buttonStyle: { margin: "auto" },
+            news: [],
         };
         this.names = {
             tarih: "Tarih",
@@ -93,12 +104,18 @@ export class App extends Component {
             const data = await axios.get(
                 "https://kovidbot.herokuapp.com/fulldatakoved/",
             );
+            await this.getNews();
             const res = data["data"].reverse();
             this.setState({ data: res });
             this.changeData();
             this.setState({ showLoader: false });
-            console.log(res.slice().reverse()[0]);
             return res;
+        };
+        this.getNews = async () => {
+            const data = await axios.get(
+                "https://kovidbot.herokuapp.com/getnewskoved/",
+            );
+            this.setState({ news: data["data"] });
         };
         this.handleChange = async (i, checked) => {
             if (checked) {
@@ -114,6 +131,12 @@ export class App extends Component {
         };
     }
     render() {
+        const override = css`
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        `;
         return (
             <div>
                 <h1 className="title has-text-centered">
@@ -159,6 +182,7 @@ export class App extends Component {
                         <span>{this.state.button}</span>
                     </button>
                 </div>
+                <br />
                 {this.props.grafik ? (
                     <Grafik
                         showLoader={this.state.showLoader}
@@ -180,6 +204,14 @@ export class App extends Component {
                 ) : (
                     <span></span>
                 )}
+                <Haber news={this.state.news} />
+                <Loader
+                    className="loading"
+                    css={override}
+                    loading={this.state.showLoader}
+                    color="#008FFB"
+                    size={150}
+                ></Loader>
             </div>
         );
     }
