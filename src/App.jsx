@@ -13,20 +13,17 @@ import Chart from "react-apexcharts";
 import { Quicklink } from "react-quicklink";
 import { css } from "@emotion/react";
 
-const override = css`
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-`;
 export class App extends Component {
     constructor(props) {
         super(props);
+        const url = "https://kovidbot.herokuapp.com";
+
+        this.totalTasks = 2;
 
         this.state = {
             data: [{ Yükleniyor: "Lütfen bekleyin" }],
             options: null,
-            showLoader: true,
+            tasks: 0,
             button: "Yenile",
             buttonStyle: { margin: "auto" },
             news: [],
@@ -100,22 +97,18 @@ export class App extends Component {
             });
         };
         this.getFullData = async () => {
-            this.setState({ showLoader: true });
-            const data = await axios.get(
-                "https://kovidbot.herokuapp.com/fulldatakoved/",
-            );
-            await this.getNews();
+            await console.log("Full data ");
+            const data = await axios.get(url + "/fulldatakoved/");
             const res = data["data"].reverse();
             this.setState({ data: res });
             this.changeData();
-            this.setState({ showLoader: false });
-            return res;
+            this.setState({ tasks: this.state.tasks + 1 });
         };
         this.getNews = async () => {
-            const data = await axios.get(
-                "https://kovidbot.herokuapp.com/getnewskoved/",
-            );
+            await console.log("News ");
+            const data = await axios.get(url + "/getnewskoved/");
             this.setState({ news: data["data"] });
+            this.setState({ tasks: this.state.tasks + 1 });
         };
         this.handleChange = async (i, checked) => {
             if (checked) {
@@ -128,6 +121,11 @@ export class App extends Component {
             await localStorage.clear();
             localStorage.setItem("datatoget", this.datatoget.join(" "));
             await this.changeData();
+        };
+        this.refresh = async () => {
+            this.setState({ tasks: 0 });
+            this.getFullData();
+            this.getNews();
         };
     }
     render() {
@@ -157,7 +155,9 @@ export class App extends Component {
                         style={this.state.buttonStyle}
                         className={
                             "button is-info" +
-                            (this.state.showLoader ? " is-loading" : "")
+                            (this.state.tasks !== this.totalTasks
+                                ? " is-loading"
+                                : "")
                         }
                         onClick={async () => {
                             this.setState({
@@ -166,7 +166,7 @@ export class App extends Component {
                                     margin: "auto",
                                 },
                             });
-                            await this.getFullData();
+                            await this.refresh();
                             this.setState({
                                 buttonStyle: {
                                     pointerEvents: "all",
@@ -185,7 +185,7 @@ export class App extends Component {
                 <br />
                 {this.props.grafik ? (
                     <Grafik
-                        showLoader={this.state.showLoader}
+                        showLoader={this.state.tasks !== this.totalTasks}
                         getFullData={this.getFullData}
                         handleChange={this.handleChange}
                         Chart={this.state.chart}
@@ -208,7 +208,7 @@ export class App extends Component {
                 <Loader
                     className="loading"
                     css={override}
-                    loading={this.state.showLoader}
+                    loading={this.state.tasks !== this.totalTasks}
                     color="#008FFB"
                     size={150}
                 ></Loader>
@@ -216,7 +216,7 @@ export class App extends Component {
         );
     }
     async componentDidMount() {
-        await this.getFullData();
+        this.refresh();
     }
 }
 

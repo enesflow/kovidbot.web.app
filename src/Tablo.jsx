@@ -90,9 +90,6 @@ export class Tablo extends Component {
             </div>
         );
     }
-    async componentDidMount() {
-        this.props.getFullData();
-    }
 }
 
 export default Tablo;
