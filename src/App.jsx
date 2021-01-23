@@ -10,13 +10,13 @@ import "react-bulma-components/dist/react-bulma-components.min.css";
 import "bulma-switch/dist/css/bulma-switch.min.css";
 import "bulma-tooltip/dist/css/bulma-tooltip.min.css";
 import Chart from "react-apexcharts";
-import { Quicklink } from "react-quicklink";
+//import { Quicklink } from "react-quicklink";
 import { css } from "@emotion/react";
 
 export class App extends Component {
     constructor(props) {
         super(props);
-        const url = "https://kovidbot.herokuapp.com";
+        const url = "http://localhost:8001" ?? "https://kovidbot.herokuapp.com";
 
         this.totalTasks = 2;
 
@@ -137,17 +137,72 @@ export class App extends Component {
         `;
         return (
             <div>
-                <h1 className="title has-text-centered">
-                    <Quicklink
+                <nav
+                    class="navbar is-fixed-top"
+                    role="navigation"
+                    aria-label="main navigation"
+                >
+                    <div class="navbar-brand">
+                        <a class="navbar-item" href={window.location.href}>
+                            <img
+                                src="https://raw.githubusercontent.com/EnxGitHub/kovidbot/main/kovidbot.svg"
+                                width="64"
+                            />
+                            <strong>Kovidbot</strong>
+                        </a>
+
+                        <a
+                            role="button"
+                            class="navbar-burger"
+                            aria-label="menu"
+                            aria-expanded="false"
+                            data-target="navbarBasicExample"
+                        >
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+
+                    <div id="navbarBasicExample" class="navbar-menu">
+                        <div class="navbar-start">
+                            <a class="navbar-item" href="#grafik">
+                                Grafik
+                            </a>
+                            <a class="navbar-item" href="#tablo">
+                                Tablo
+                            </a>
+                            <a class="navbar-item" href="#haber">
+                                En yeni haberler
+                            </a>
+                        </div>
+
+                        <div class="navbar-end">
+                            <div class="navbar-item">
+                                <div class="buttons">
+                                    <a class="button is-primary" href="#about">
+                                        Daha fazla bilgi
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <h1
+                    style={{ marginTop: "10vh" }}
+                    className="title has-text-centered"
+                >
+                    <a
                         rel="noreferrer"
                         target="_blank"
                         style={{ marginRight: "10px" }}
-                        to="https://t.me/kovidbot"
+                        href="https://t.me/kovidbot"
                         title="@kovidbot"
                         alt="@kovidbot"
                     >
                         @kovidbot
-                    </Quicklink>
+                    </a>
                     Türkiye Kovid19 Verileri
                 </h1>
                 <div className="container">
@@ -185,6 +240,7 @@ export class App extends Component {
                 <br />
                 {this.props.grafik ? (
                     <Grafik
+                        id="grafik"
                         showLoader={this.state.tasks !== this.totalTasks}
                         getFullData={this.getFullData}
                         handleChange={this.handleChange}
@@ -212,6 +268,10 @@ export class App extends Component {
                     color="#008FFB"
                     size={150}
                 ></Loader>
+                <div id="about"></div>
+                <footer>
+                    <p>&copy; Copyright {new Date().getFullYear()}</p>
+                </footer>
             </div>
         );
     }

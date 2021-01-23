@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Haber.css";
 import "./All.css";
-import { Quicklink } from "react-quicklink";
+//import { Quicklink } from "react-quicklink";
 
 export class Haber extends Component {
     constructor(props) {
@@ -9,14 +9,14 @@ export class Haber extends Component {
     }
     render() {
         return (
-            <div>
+            <div id="haber">
                 <h1 className="title has-text-centered">En Yeni Haberler</h1>
                 <div className="news-parent">
                     {this.props.news.map((i) => {
                         return (
-                            <Quicklink
+                            <a
                                 className="card"
-                                to={i["siteurl"]}
+                                href={i["siteurl"]}
                                 target="_blank"
                                 data-tooltip={
                                     "Haberin tamamını okumak için habere tıklayın"
@@ -47,7 +47,7 @@ export class Haber extends Component {
                                         {i["content"]}
                                     </div>
                                 </div>
-                            </Quicklink>
+                            </a>
                         );
                     })}
                 </div>

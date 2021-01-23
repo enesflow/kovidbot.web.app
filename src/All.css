@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
 .table-parent,
 .chart,
 .news-parent,
@@ -5,4 +7,18 @@
     width: 75vw;
     margin: 50px auto;
     overflow: hidden;
+    color: #333;
+    font-family: "Roboto", sans-serif !important;
+}
+
+footer {
+    font-size: 20px;
+    text-align: center;
+    background-color: #333;
+    color: #eee;
+}
+
+footer > p {
+    padding: 0.75rem;
+    margin: auto;
 }

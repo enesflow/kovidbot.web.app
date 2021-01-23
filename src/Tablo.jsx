@@ -28,7 +28,7 @@ export class Tablo extends Component {
             "agir_hasta_sayisi",
         ];
         return (
-            <div>
+            <div id="tablo">
                 <br />
                 <h1 className="title has-text-centered">Günlük Tablo</h1>
                 <div className="table-parent">

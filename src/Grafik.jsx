@@ -15,7 +15,7 @@ export class Grafik extends Component {
     }
     render() {
         return (
-            <div>
+            <div id="grafik">
                 <h1 className="title has-text-centered">Grafik</h1>
                 <div className="columns ">
                     <div className="checkboxes">
