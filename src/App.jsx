@@ -16,7 +16,7 @@ import { css } from "@emotion/react";
 export class App extends Component {
     constructor(props) {
         super(props);
-        const url = "http://localhost:8001" ?? "https://kovidbot.herokuapp.com";
+        const url = "https://kovidbot.herokuapp.com";
 
         this.totalTasks = 2;
 
